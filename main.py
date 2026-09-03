@@ -4,6 +4,9 @@ import sys
 from datetime import datetime
 import aiosqlite
 
+from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram import Bot, Dispatcher, F, Router
 from aiogram.enums import ParseMode, ChatMemberStatus
 from aiogram.filters import CommandStart, Command
@@ -22,8 +25,10 @@ DB_NAME = "bilet_bot.db"
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
-bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
-dp = Dispatcher(storage=MemoryStorage())
+bot = Bot(
+    token=BOT_TOKEN, 
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)dp = Dispatcher(storage=MemoryStorage())
 router = Router()
 dp.include_router(router)
 
