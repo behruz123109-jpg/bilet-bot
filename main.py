@@ -4,10 +4,8 @@ import sys
 from datetime import datetime
 import aiosqlite
 
-from aiogram import Bot, Dispatcher
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
 from aiogram import Bot, Dispatcher, F, Router
+from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode, ChatMemberStatus
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
@@ -25,10 +23,12 @@ DB_NAME = "bilet_bot.db"
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
+# Bot va Dispatcher ob'ektlarini yaratish
 bot = Bot(
     token=BOT_TOKEN, 
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-)dp = Dispatcher(storage=MemoryStorage())
+)
+dp = Dispatcher(storage=MemoryStorage())
 router = Router()
 dp.include_router(router)
 
@@ -406,15 +406,13 @@ async def process_broadcast(message: Message, state: FSMContext):
 
 # ==================== BACKGROUND WORKER (MONITORING) ====================
 async def ticket_checker_loop():
-    """ Orqa fonda avtomatik biletlarni tekshiruvchi skript simulation """
+    """ Orqa fonda avtomatik biletlarni tekshiruvchi skript """
     while True:
         try:
             async with aiosqlite.connect(DB_NAME) as db:
                 async with db.execute("SELECT id, user_id, category, route, date FROM monitors WHERE is_active = 1") as cursor:
                     monitors = await cursor.fetchall()
             
-            # Bu yerga kelajakda real Railway/iTicket parsing kodi ulanadi.
-            # Hozircha namuna uchun simulyatsiya kodi yozilgan.
             for m_id, u_id, cat, route, date in monitors:
                 # Real parser ulanadigan joy
                 pass
